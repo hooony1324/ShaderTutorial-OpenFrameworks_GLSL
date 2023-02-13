@@ -51,7 +51,7 @@ void ofApp::update() {
 void ofApp::draw() {
 
 	ofDisableBlendMode();
-	ofEnableDepthTest();
+	//ofEnableDepthTest();
 
 	alphaTestShader.begin();
 	alphaTestShader.setUniformTexture("tex", alienImg, 0);
@@ -60,7 +60,7 @@ void ofApp::draw() {
 	backgroundMesh.draw();
 	alphaTestShader.end();
 
-	ofDisableDepthTest();
+	//ofDisableDepthTest();
 	ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ALPHA);
 
 	cloudShader.begin();
