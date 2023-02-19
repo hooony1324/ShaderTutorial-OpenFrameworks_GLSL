@@ -23,6 +23,7 @@ public:
 
 	ofShader cloudShader;
 	ofShader alphaTestShader;
+	ofShader spriteShader;
 
 	ofMesh charMesh;
 	ofMesh backgroundMesh;

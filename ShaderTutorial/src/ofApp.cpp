@@ -33,13 +33,14 @@ void ofApp::setup()
 	buildMesh(sunMesh, 1.0, 1.0, glm::vec3(0.0, 0.0, 0.4));
 	buildMesh(cloudMesh, 0.25, 0.15, glm::vec3(-0.55, 0.0, 0.0));
 
-	alienImg.load("alien.png");
+	alienImg.load("walk_sheet.png");
 	backgroundImg.load("forest.png");
 	cloudImg.load("cloud.png");
 	sunImg.load("sun.png");
 
 	alphaTestShader.load("passthrough.vert", "alphaTest.frag");
 	cloudShader.load("passthrough.vert", "cloud.frag");
+	spriteShader.load("sprite.vert", "alphaTest.frag");
 }
 
 //--------------------------------------------------------------
@@ -50,17 +51,28 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
+	static float frame = 0.0;
+	frame = (frame > 10) ? 0.0 : frame += 0.2;
+	glm::vec2 spriteSize = glm::vec2(0.28, 0.19);
+	glm::vec2 spriteFrame = glm::vec2((int)frame % 3, (int)frame / 3);
+
 	ofDisableBlendMode();
-	//ofEnableDepthTest();
+	ofEnableDepthTest();
+
+	spriteShader.begin();
+	spriteShader.setUniformTexture("tex", alienImg, 0);
+	spriteShader.setUniform2f("size", spriteSize);
+	spriteShader.setUniform2f("offset", spriteFrame);
+	spriteShader.setUniformTexture("tex", alienImg, 0);
+	charMesh.draw();
+	spriteShader.end();
 
 	alphaTestShader.begin();
-	alphaTestShader.setUniformTexture("tex", alienImg, 0);
-	charMesh.draw();
 	alphaTestShader.setUniformTexture("tex", backgroundImg, 0);
 	backgroundMesh.draw();
 	alphaTestShader.end();
 
-	//ofDisableDepthTest();
+	ofDisableDepthTest();
 	ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ALPHA);
 
 	cloudShader.begin();
@@ -72,6 +84,8 @@ void ofApp::draw() {
 	cloudShader.setUniformTexture("tex", sunImg, 0);
 	sunMesh.draw();
 	cloudShader.end();
+
+
 }
 
 //--------------------------------------------------------------

@@ -202,6 +202,7 @@
     <None Include="bin\data\alphaTest.frag" />
     <None Include="bin\data\cloud.frag" />
     <None Include="bin\data\passthrough.vert" />
+    <None Include="bin\data\sprite.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ProjectExtensions>

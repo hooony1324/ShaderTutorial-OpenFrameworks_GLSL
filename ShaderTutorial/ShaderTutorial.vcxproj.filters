@@ -2,26 +2,26 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="src\ofApp.cpp">
-      <Filter>src</Filter>
+      <Filter>00_src</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
-      <Filter>src</Filter>
+      <Filter>00_src</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="src">
+    <Filter Include="00_src">
       <UniqueIdentifier>{d8376475-7454-4a24-b08a-aac121d3ad6f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="fragShader">
-      <UniqueIdentifier>{b67f48c2-9c62-413c-b4d5-b1a1c3011091}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="vertShader">
+    <Filter Include="01_vertShader">
       <UniqueIdentifier>{0ac69a5e-6fea-43a9-8ef6-af5558e830c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02_fragShader">
+      <UniqueIdentifier>{b67f48c2-9c62-413c-b4d5-b1a1c3011091}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\ofApp.h">
-      <Filter>src</Filter>
+      <Filter>00_src</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -29,13 +29,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="bin\data\passthrough.vert">
-      <Filter>vertShader</Filter>
+      <Filter>01_vertShader</Filter>
     </None>
     <None Include="bin\data\alphaTest.frag">
-      <Filter>fragShader</Filter>
+      <Filter>02_fragShader</Filter>
     </None>
     <None Include="bin\data\cloud.frag">
-      <Filter>fragShader</Filter>
+      <Filter>02_fragShader</Filter>
+    </None>
+    <None Include="bin\data\sprite.vert">
+      <Filter>01_vertShader</Filter>
     </None>
   </ItemGroup>
 </Project>
