@@ -35,4 +35,7 @@ public:
 	ofImage backgroundImg;
 	ofImage cloudImg;
 
+	glm::vec3 charPos;
+	glm::vec3 charScale;
+	float charRot;
 };

@@ -41,6 +41,11 @@ void ofApp::setup()
 	alphaTestShader.load("passthrough.vert", "alphaTest.frag");
 	cloudShader.load("passthrough.vert", "cloud.frag");
 	spriteShader.load("sprite.vert", "alphaTest.frag");
+
+	// 버텍스 이동
+	charPos = glm::vec3(0, 0, 0);
+	charScale = glm::vec3(1, 1, 1);
+	charRot = 1.0f;
 }
 
 //--------------------------------------------------------------
@@ -63,6 +68,9 @@ void ofApp::draw() {
 	spriteShader.setUniformTexture("tex", alienImg, 0);
 	spriteShader.setUniform2f("size", spriteSize);
 	spriteShader.setUniform2f("offset", spriteFrame);
+	spriteShader.setUniform3f("translation", glm::vec3(charPos.x, charPos.y, charPos.z));
+	spriteShader.setUniform3f("scale", glm::vec3(charScale.x, charScale.y, charScale.z));
+	spriteShader.setUniform1f("radian", charRot);
 	spriteShader.setUniformTexture("tex", alienImg, 0);
 	charMesh.draw();
 	spriteShader.end();
@@ -91,6 +99,42 @@ void ofApp::draw() {
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
 
+	glm::vec3 input(0, 0, 0);
+ 
+	if (key == 'w')
+	{
+		input += glm::vec3(0, 0.00f, 0.01f);
+		charScale += glm::vec3(0.2f, 0.2f, 0.2f);
+	}
+
+	if (key == 'a')
+	{
+		input += glm::vec3(-0.01f, 0, 0);
+	}
+
+	if (key == 's')
+	{
+		input += glm::vec3(0, -0.00f, -0.01f);
+		charScale += glm::vec3(-0.2f, -0.2f, -0.2f);
+	}
+
+	if (key == 'd')
+	{
+		input += glm::vec3(0.01f, 0, 0);
+	}
+	
+	charPos += input;
+
+	// 회전
+	if (key == 'q')
+	{
+		charRot += 0.2f;
+	}
+
+	if (key == 'e')
+	{
+		charRot += -0.2f;
+	}
 }
 
 //--------------------------------------------------------------
