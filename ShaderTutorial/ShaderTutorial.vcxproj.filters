@@ -28,22 +28,10 @@
     <ResourceCompile Include="icon.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="bin\data\passthrough.vert">
-      <Filter>01_vertShader</Filter>
-    </None>
-    <None Include="bin\data\alphaTest.frag">
-      <Filter>02_fragShader</Filter>
-    </None>
-    <None Include="bin\data\cloud.frag">
-      <Filter>02_fragShader</Filter>
-    </None>
-    <None Include="bin\data\spritesheet.vert">
-      <Filter>01_vertShader</Filter>
-    </None>
     <None Include="bin\data\mesh.vert">
       <Filter>01_vertShader</Filter>
     </None>
-    <None Include="bin\data\uv_vis.frag">
+    <None Include="bin\data\normal_vis.frag">
       <Filter>02_fragShader</Filter>
     </None>
   </ItemGroup>
