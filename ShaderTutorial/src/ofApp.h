@@ -1,6 +1,13 @@
 #pragma once
 
 #include "ofMain.h"
+struct CameraData
+{
+	glm::vec3 pos;
+	glm::vec3 rot;
+	float fov;
+};
+
 
 class ofApp : public ofBaseApp {
 
@@ -21,21 +28,7 @@ public:
 	void dragEvent(ofDragInfo dragInfo);
 	void gotMessage(ofMessage msg);
 
-	ofShader cloudShader;
-	ofShader alphaTestShader;
-	ofShader spriteShader;
-
-	ofMesh charMesh;
-	ofMesh backgroundMesh;
-	ofMesh cloudMesh;
-	ofMesh sunMesh;
-
-	ofImage sunImg;
-	ofImage alienImg;
-	ofImage backgroundImg;
-	ofImage cloudImg;
-
-	glm::vec3 charPos;
-	glm::vec3 charScale;
-	float charRot;
+	ofShader uvShader;
+	ofMesh torusMesh;
+	CameraData cam;
 };

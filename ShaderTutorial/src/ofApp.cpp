@@ -1,51 +1,14 @@
 #include "ofApp.h"
 
-void buildMesh(ofMesh& mesh, float w, float h, glm::vec3 pos)
-{
-	float verts[] = { -w + pos.x, -h + pos.y,  pos.z,
-		-w + pos.x,  h + pos.y,  pos.z,
-		w + pos.x,  h + pos.y,  pos.z,
-		w + pos.x, -h + pos.y,  pos.z };
-
-	float uvs[] = { 0,0, 0,1, 1,1, 1,0 };
-
-	for (int i = 0; i < 4; ++i) {
-		int idx = i * 3;
-		int uvIdx = i * 2;
-
-		mesh.addVertex(glm::vec3(verts[idx], verts[idx + 1], verts[idx + 2]));
-		mesh.addTexCoord(glm::vec2(uvs[uvIdx], uvs[uvIdx + 1]));
-	}
-
-	ofIndexType indices[6] = { 0,1,2,2,3,0 };
-	mesh.addIndices(indices, 6);
-}
-
-
 //--------------------------------------------------------------
-void ofApp::setup()
-{
+void ofApp::setup() {
 	ofDisableArbTex();
 	ofEnableDepthTest();
 
-	buildMesh(charMesh, 0.1, 0.2, glm::vec3(0.0, -0.2, 0.0));
-	buildMesh(backgroundMesh, 1.0, 1.0, glm::vec3(0.0, 0.0, 0.5));
-	buildMesh(sunMesh, 1.0, 1.0, glm::vec3(0.0, 0.0, 0.4));
-	buildMesh(cloudMesh, 0.25, 0.15, glm::vec3(-0.55, 0.0, 0.0));
+	torusMesh.load("torus.ply");
+	uvShader.load("mesh.vert", "normal_vis.frag");
 
-	alienImg.load("walk_sheet.png");
-	backgroundImg.load("forest.png");
-	cloudImg.load("cloud.png");
-	sunImg.load("sun.png");
-
-	alphaTestShader.load("passthrough.vert", "alphaTest.frag");
-	cloudShader.load("passthrough.vert", "cloud.frag");
-	spriteShader.load("sprite.vert", "alphaTest.frag");
-
-	// 버텍스 이동
-	charPos = glm::vec3(0, 0, 0);
-	charScale = glm::vec3(1, 1, 1);
-	charRot = 1.0f;
+	cam.pos = glm::vec3(0, 0, 1);
 }
 
 //--------------------------------------------------------------
@@ -54,87 +17,35 @@ void ofApp::update() {
 }
 
 //--------------------------------------------------------------
-void ofApp::draw() {
+void ofApp::draw()
+{
+	using namespace glm;
 
-	static float frame = 0.0;
-	frame = (frame > 10) ? 0.0 : frame += 0.2;
-	glm::vec2 spriteSize = glm::vec2(0.28, 0.19);
-	glm::vec2 spriteFrame = glm::vec2((int)frame % 3, (int)frame / 3);
+	cam.fov = radians(90.0f);
+	float aspect = 1024.0f / 768.0f;
 
-	ofDisableBlendMode();
-	ofEnableDepthTest();
+	mat4 model = rotate(1.0f, vec3(1, 1, 1)) * scale(vec3(0.5, 0.5, 0.5));
+	mat4 view = inverse(translate(cam.pos));
+	mat4 proj = perspective(cam.fov, aspect, 0.01f, 10.0f);
 
-	spriteShader.begin();
-	spriteShader.setUniformTexture("tex", alienImg, 0);
-	spriteShader.setUniform2f("size", spriteSize);
-	spriteShader.setUniform2f("offset", spriteFrame);
-	spriteShader.setUniform3f("translation", glm::vec3(charPos.x, charPos.y, charPos.z));
-	spriteShader.setUniform3f("scale", glm::vec3(charScale.x, charScale.y, charScale.z));
-	spriteShader.setUniform1f("radian", charRot);
-	spriteShader.setUniformTexture("tex", alienImg, 0);
-	charMesh.draw();
-	spriteShader.end();
+	mat4 mvp = proj * view * model;
 
-	alphaTestShader.begin();
-	alphaTestShader.setUniformTexture("tex", backgroundImg, 0);
-	backgroundMesh.draw();
-	alphaTestShader.end();
+	uvShader.begin();
+	uvShader.setUniformMatrix4f("mvp", mvp);
+	uvShader.setUniformMatrix4f("model", model);
 
-	ofDisableDepthTest();
-	ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ALPHA);
-
-	cloudShader.begin();
-	cloudShader.setUniformTexture("tex", cloudImg, 0);
-	cloudMesh.draw();
-
-	ofEnableBlendMode(ofBlendMode::OF_BLENDMODE_ADD);
-
-	cloudShader.setUniformTexture("tex", sunImg, 0);
-	sunMesh.draw();
-	cloudShader.end();
-
-
+	torusMesh.draw();
+	uvShader.end();
 }
+
+
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-
-	glm::vec3 input(0, 0, 0);
- 
-	if (key == 'w')
-	{
-		input += glm::vec3(0, 0.00f, 0.01f);
-		charScale += glm::vec3(0.2f, 0.2f, 0.2f);
-	}
-
-	if (key == 'a')
-	{
-		input += glm::vec3(-0.01f, 0, 0);
-	}
-
-	if (key == 's')
-	{
-		input += glm::vec3(0, -0.00f, -0.01f);
-		charScale += glm::vec3(-0.2f, -0.2f, -0.2f);
-	}
-
-	if (key == 'd')
-	{
-		input += glm::vec3(0.01f, 0, 0);
-	}
-	
-	charPos += input;
-
-	// 회전
-	if (key == 'q')
-	{
-		charRot += 0.2f;
-	}
-
-	if (key == 'e')
-	{
-		charRot += -0.2f;
-	}
+	if (key == 'w') { cam.pos += glm::vec3(0, 0.1, 0); }
+	if (key == 'a') { cam.pos += glm::vec3(-0.1, 0, 0); }
+	if (key == 's') { cam.pos += glm::vec3(0, -0.1, 0); }
+	if (key == 'd') { cam.pos += glm::vec3(0.1, 0, 0); }
 }
 
 //--------------------------------------------------------------
